@@ -10,7 +10,10 @@ import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.util.concurrent.Executor;
 
@@ -18,14 +21,23 @@ public class MainActivity extends AppCompatActivity {
 
     BiometricPrompt bPrompt;
     BiometricPrompt.PromptInfo bproInfo;
-    ConstraintLayout mLayout;
+    MaterialButton login;
+    MaterialButton signup;
+    EditText username;
+    EditText password = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mLayout = findViewById(R.id.mainLayout);
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+        login = (MaterialButton) findViewById(R.id.loginButt);
+        signup = (MaterialButton) findViewById(R.id.signUp);
 
+    }
+
+    public void fingerprint(View v) {
         BiometricManager bManager = BiometricManager.from(this);
         int i = bManager.canAuthenticate();
         if (i == bManager.BIOMETRIC_ERROR_NO_HARDWARE) {
@@ -48,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
-                mLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -58,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bproInfo = new BiometricPrompt.PromptInfo.Builder().setTitle("JavaProjekti")
-                .setDescription("User Fringerprint to login").setDeviceCredentialAllowed(true).build();
+                .setDescription("User Fringerprint to login")   .setDeviceCredentialAllowed(true).build();
 
         bPrompt.authenticate(bproInfo);
     }
